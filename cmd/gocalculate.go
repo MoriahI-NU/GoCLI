@@ -85,7 +85,7 @@ var gocalculateCmd = &cobra.Command{
 			//Calculate the Mean
 			var columnMeans []float64
 			for i := 0; i < 7; i++ {
-				columnMeans = append(columnMeans, columnSums[i]/float64(len(records)))
+				columnMeans = append(columnMeans, columnSums[i]/float64(len(records)-1))
 			}
 
 			//Create the output file
