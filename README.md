@@ -55,7 +55,7 @@ You can clearly see that Go has the best execution time from this experiment. Fr
 The output files from this application have been added to this repo so you can see for yourselves the results of each language's calculations. I will include some comparison tables below for ease of access.
 
 ### Maximum
-|----------| Go     | Python | R      |
+| Variable | Go     | Python | R      |
 |----------|--------|--------|--------|
 | Value    | 500001 | 500001 | 500001 |
 | Income   | 15     | 15     | 15     |
@@ -66,7 +66,7 @@ The output files from this application have been added to this repo so you can s
 | HH       | 6082   | 6082   | 6082   |
 
 ### Minimum
-|----------| Go     | Python | R      |
+| Variable | Go     | Python | R      |
 |----------|--------|--------|--------|
 | Value    | 14999  | 14999  | 14999  |
 | Income   | 0.4999 | 0.4999 | 0.4999 |
@@ -78,7 +78,7 @@ The output files from this application have been added to this repo so you can s
 
 
 ### Mean
-|----------| Go     | Python | R      |
+| Variable | Go     | Python | R      |
 |----------|--------|--------|--------|
 | Value    | 206856 | 206856 | 206856 |
 | Income   | 3.87   | 3.87   | 3.87   |
