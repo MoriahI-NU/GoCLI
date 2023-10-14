@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -29,91 +30,96 @@ var gocalculateCmd = &cobra.Command{
 			return
 		}
 
-		//Open the input CSV file
-		InputFileName, err := os.Open(InputFileName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer InputFileName.Close()
+		//start keeping track of time
+		startTime := time.Now()
 
-		//Create CSV reader
-		reader := csv.NewReader(bufio.NewReader(InputFileName))
+		for repetition := 0; repetition < 100; repetition++ {
 
-		//Read the CSV data
-		records, err := reader.ReadAll()
-		if err != nil {
-			log.Fatal(err)
-		}
+			//Open the input CSV file
+			InputFileName, err := os.Open(InputFileName)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer InputFileName.Close()
 
-		//Calculate min, max and mean for each column
+			//Create CSV reader
+			reader := csv.NewReader(bufio.NewReader(InputFileName))
 
-		//Create empty containers
-		var columnSums []float64
-		var columnMin []float64
-		var columnMax []float64
+			//Read the CSV data
+			records, err := reader.ReadAll()
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		//Add values to empty containers
-		for i := 0; i < 7; i++ {
-			columnSums = append(columnSums, 0)
-			columnMin = append(columnMin, float64(9999999))
-			columnMax = append(columnMax, float64(-9999999))
-		}
+			//Calculate min, max and mean for each column
 
-		//iterate through each column and calculate each statistic
-		for _, record := range records[1:] {
-			for i, value := range record {
-				num, err := strconv.ParseFloat(value, 64)
-				if err != nil {
-					log.Fatal(err)
-				}
-				columnSums[i] += num
-				if num < columnMin[i] {
-					columnMin[i] = num
-				}
-				if num > columnMax[i] {
-					columnMax[i] = num
+			//Create empty containers
+			var columnSums []float64
+			var columnMin []float64
+			var columnMax []float64
+
+			//Add values to empty containers
+			for i := 0; i < 7; i++ {
+				columnSums = append(columnSums, 0)
+				columnMin = append(columnMin, float64(9999999))
+				columnMax = append(columnMax, float64(-9999999))
+			}
+
+			//iterate through each column and calculate each statistic
+			for _, record := range records[1:] {
+				for i, value := range record {
+					num, err := strconv.ParseFloat(value, 64)
+					if err != nil {
+						log.Fatal(err)
+					}
+					columnSums[i] += num
+					if num < columnMin[i] {
+						columnMin[i] = num
+					}
+					if num > columnMax[i] {
+						columnMax[i] = num
+					}
 				}
 			}
+
+			//Calculate the Mean
+			var columnMeans []float64
+			for i := 0; i < 7; i++ {
+				columnMeans = append(columnMeans, columnSums[i]/float64(len(records)))
+			}
+
+			//Create the output file
+			OutputFileName, err := os.Create(OutputFileName)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer OutputFileName.Close()
+
+			//Write the summary statistics to the output file
+			outputWriter := bufio.NewWriter(OutputFileName)
+			for i := 0; i < 7; i++ {
+				fmt.Fprint(outputWriter, "Column", " ", i+1, ":", records[0][i], "\n")
+				fmt.Fprint(outputWriter, "Minimum:", " ", columnMin[i], "\n")
+				fmt.Fprint(outputWriter, "Maximum:", " ", columnMax[i], "\n")
+				fmt.Fprint(outputWriter, "Mean:", " ", columnMeans[i], "\n")
+			}
+
+			//Flush and close the output file
+			outputWriter.Flush()
 		}
 
-		//Calculate the Mean
-		var columnMeans []float64
-		for i := 0; i < 7; i++ {
-			columnMeans = append(columnMeans, columnSums[i]/float64(len(records)))
-		}
+		//Calculate Execution Time
+		endTime := time.Now()
+		elapsedTime := endTime.Sub(startTime).Seconds()
 
-		//Create the output file
-		OutputFileName, err := os.Create(OutputFileName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer OutputFileName.Close()
-
-		//Write the summary statistics to the output file
-		outputWriter := bufio.NewWriter(OutputFileName)
-		for i := 0; i < 7; i++ {
-			fmt.Fprint(outputWriter, "Column", " ", i+1, ":", records[0][i], "\n")
-			fmt.Fprint(outputWriter, "Minimum:", " ", columnMin[i], "\n")
-			fmt.Fprint(outputWriter, "Maximum:", " ", columnMax[i], "\n")
-			fmt.Fprint(outputWriter, "Mean:", " ", columnMeans[i], "\n")
-		}
-
-		//Flush and close the output file
-		outputWriter.Flush()
+		fmt.Println("Execution Time (sec) for 100 runs = ", elapsedTime)
+		fmt.Println("Average Execution Time (sec) per run = ", elapsedTime/100)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(gocalculateCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// gocalculateCmd.PersistentFlags().String("foo", "", "A help for foo")
 	rootCmd.PersistentFlags().StringVarP(&InputFileName, "input", "i", "", "Input CSV file")
 	rootCmd.PersistentFlags().StringVarP(&OutputFileName, "output", "o", "", "Output plain text file")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// gocalculateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
