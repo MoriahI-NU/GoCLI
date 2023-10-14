@@ -19,7 +19,9 @@ These tasks may be completed with either Go, Python, or R.
 
 Regardless of the language chosen, the application will repeat tasks 1-3 one hundred times. The output will provide the total runtime for all iterations, as well as the average time for an individual run. Summary statistics from each language may vary, but all include at least the maximum, minimum, and mean for each variable.
 
-When running the execution file, GoCLI.exe, you will be presented with the following:
+When running the execution file, GoCLI.exe, you will be presented with the following menu:
+
+![Menu](images/exe_menu.JPG)
 
 
 To utilize the application's function, write a command with the format:
