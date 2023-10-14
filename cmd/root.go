@@ -27,9 +27,5 @@ func Execute() {
 }
 
 func init() {
-	// define your flags and configuration settings.
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
