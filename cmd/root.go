@@ -12,7 +12,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "housing_stats",
+	Use:   "GoCLI",
 	Short: "Calculate summary statistics for housesInput using Python, R, or Go",
 	Long:  "Outputs textfiles summarizing the max, min, and mean values for each column in housesInput.csv. This can be performed with either Python, R, or Go and will also produce the execution times for each run.",
 }
